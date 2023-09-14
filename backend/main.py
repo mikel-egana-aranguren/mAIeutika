@@ -2,18 +2,20 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import Union
 
-class Item(BaseModel):
-    name: str
-
 app = FastAPI()
 
+"""
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
+"""
+    
+class Prompt(BaseModel):
+    name: str
 
 @app.post("/pregunta/")
-async def hacerPregunta(item: Item):
-    return item
+async def hacerPregunta(prompt: Prompt):
+    return prompt
 
 """ Peticion HTTP con BurpSuite
 POST /pregunta/ HTTP/1.1
