@@ -1,0 +1,42 @@
+version: "3"
+services:
+  web:
+    image: carshow
+    environment:
+      - ALLOW_OVERRIDE=true
+    ports:
+      - "81:80"
+      - "4433:443"
+    links:
+      - db
+    volumes:
+      - ./app:/var/www/html/
+      - ./app/logs:/var/log/apache2
+      - ./certificados:/var/imported/ssl
+      - ./virtualhost/carshow.conf:/etc/apache2/sites-available/carshow.conf 
+
+  db:
+    image: mysql:latest
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    #command: --default_authentication_plugin=caching_sha2_password
+    volumes:
+      - ./mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "root1234"
+      MYSQL_USER: "admin"
+      MYSQL_PASSWORD: "admin1234"
+      MYSQL_DATABASE: "COCHES"
+    ports:
+      - "8889:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    links:
+      - db
+    ports:
+      - 8890:80
+    environment:
+      MYSQL_USER: "admin" #usuario admin para phpmyadmin (root)
+      MYSQL_PASSWORD: "admin1234" #contraseña para admin en phpmyadmin (root)
+      MYSQL_DATABASE: "COCHES"
