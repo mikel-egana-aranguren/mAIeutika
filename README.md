@@ -34,4 +34,4 @@ deactivate
 ```
 chmod +x init.sh
 ./init.sh
-``
+```
