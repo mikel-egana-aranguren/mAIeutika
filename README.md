@@ -31,5 +31,7 @@ pip install -r python_requeriments.txt
 deactivate
 ```
 # Run application
+```
 chmod +x init.sh
 ./init.sh
+``
