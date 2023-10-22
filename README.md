@@ -19,6 +19,10 @@ node -v
 ```
 sudo npm install -g npm@latest
 ```
+1.3 Server dependecies:
+```
+pip install -r requeriments.txt
+```
 2. Clone the repository
 ```
 git clone https://github.com/un4rch/mAIeutika.git --recurse-submodules
