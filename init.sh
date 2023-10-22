@@ -1,4 +1,12 @@
-conda activate ChatTFG
-pip install "fastapi[all]" openai librosa rich typer "uvicorn[standard]" 2&>/dev/null
-cd backend
-uvicorn main:app --reload
+if [[ -z "venv/bin/activate" ]]; then
+    python -m venv venv
+fi
+source venv/bin/activate
+
+# Backend
+python backend/main.py &
+# Frontend
+cd frontend
+ng serve --open
+
+deactivate
