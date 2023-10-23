@@ -5,12 +5,12 @@ Maieutika or mAIeutika (formerly known as ChatTFG) is the name of a teaching sof
 The paradigmatic use case in one in which a teacher fixes a learning session with a specific duraction, content, and goals (including potential evaluation criteria) and students use mAIeutika as a controlled and guided interface of a LLM. The system provides also means to monitor the activity of students and to (self)evaluate their progress.
 
 # Instalation guide:
-1. Clone the repository
+## 1. Clone the repository
 ```
 git clone https://github.com/un4rch/mAIeutika.git --recurse-submodules
 ```
-2. Install depencencies:
-2.1. NodeJS
+## 2. Install depencencies:
+### 2.1. NodeJS
 ```
 sudo apt update
 cd ~
@@ -19,16 +19,17 @@ sudo bash /tmp/nodesource_setup.sh
 sudo apt install nodejs
 node -v
 ```
-2.2. npm
+### 2.2. npm
 ```
 sudo npm install -g npm@latest
 ```
-2.3 Server dependecies:
+### 2.3 Server dependecies:
 ```
 python -m venv venv
 source venv/bin/activate
 pip install -r python_requeriments.txt
 deactivate
+sudo apt install mysql-server
 ```
 # Run application
 ```
