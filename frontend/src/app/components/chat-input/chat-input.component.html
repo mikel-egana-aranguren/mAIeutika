@@ -1,0 +1,8 @@
+<!--<div>
+    <input type="text" [(ngModel)]="prompt">
+    <button (messageSent)="onMessageSent(prompt)">Submit</button>
+</div>-->
+<div class="chat_input">
+    <input type="text" [(ngModel)]="prompt" placeholder="" class="input">
+    <button (click)="sendMessage(prompt)" class="button">Submit</button>
+</div>
