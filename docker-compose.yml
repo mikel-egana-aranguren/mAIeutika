@@ -1,18 +1,30 @@
 version: "3"
 services:
   frontend:
-    image: carshow
+    image: node:18
     environment:
       - ALLOW_OVERRIDE=true
     ports:
-      - "81:80"
-      - "4433:443"
-    links:
-      - db
+      - "4200:4200"
+      #- "4433:443"
+    #links:
+    #  - db
+    working_dir: /app
     volumes:
-      - ./app:/var/www/html/
-      - ./app/logs:/var/log/apache2
-      - ./certificados:/var/imported/ssl
-      - ./virtualhost/carshow.conf:/etc/apache2/sites-available/carshow.conf 
+      - ./frontend:/app
+      #- ./app:/var/www/html/
+      #- ./app/logs:/var/log/apache2
+      #- ./certificados:/var/imported/ssl
+      #- ./virtualhost/carshow.conf:/etc/apache2/sites-available/carshow.conf 
   backend:
     image: python:3.8
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+      - ./requirements.txt:/requirements.txt  # Corregido aquí
+      - ./.env:/app/.env
+    ports:
+      - "8000:8000"
+    command: bash -c "python -m venv venv && source venv/bin/activate && pip install -r /requirements.txt && python /app/main.py"
+  #mongodb:
+  #  image: mongodb
