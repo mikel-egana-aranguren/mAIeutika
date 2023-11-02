@@ -35,7 +35,7 @@ chat = chatGPT.Chat(context=context)
 # Allow all origins during development, replace "*" with your frontend's URL in production
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
