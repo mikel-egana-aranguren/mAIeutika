@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ChatService } from 'src/app/services/chat.service';
 import { HttpClient } from '@angular/common/http';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { User } from 'src/app/models/user.model';
 
 @Component({
   selector: 'app-chat-content',
@@ -15,7 +17,8 @@ export class ChatContentComponent {
     {"role": "user", "content": "Que dia es"},
     {"role": "assistant", "content": "23 de octubre"}
   ];*/
-  messages: {"role": string, "content": string}[] = []
+  actualUser!: User;
+  messages: {"role": string, "content": string}[] = [];
 
   /*constructor(private chatService: ChatService) {
     this.subscription = this.chatService.message$.subscribe(
@@ -27,11 +30,40 @@ export class ChatContentComponent {
       }
     );
   }*/
-  constructor(private chatService: ChatService, private httpClient: HttpClient) {
+  constructor(private chatService: ChatService, private httpClient: HttpClient, public authenticationService: AuthenticationService) {
     this.subscription = this.chatService.message$.subscribe(
       (message: string) => {
-        this.messages.push({"role": "user", "content": message});
-        this.sendPostRequest(message);
+        if (message !== null) {
+          console.log(message)
+          this.messages.push({"role": "user", "content": message});
+          this.sendPostRequest(message);
+        }
+      }
+    );
+    this.authenticationService.currentUser.subscribe(user => {
+      if (!user || !user.username) {
+        // If currentUser is empty or username is not set, navigate to the login page
+        //this.router.navigate(['/login']);
+        //console.log(user);
+        console.log();
+      } else {
+        this.actualUser = user;
+      }
+    });
+  }
+
+  ngOnInit() {
+    const apiUrl = 'http://127.0.0.1:8000/messages/'
+
+    this.httpClient.get(apiUrl + this.actualUser.username).subscribe(
+      (data: any) => {
+        //this.messages = data;
+        // Filter messages where role is not 'system'
+        this.messages = data.filter((message: {"role": string, "content": string}) => message.role !== 'system');
+      },
+      (error) => {
+        // Handle errors here
+        console.error('Error:', error);
       }
     );
   }
@@ -43,7 +75,8 @@ export class ChatContentComponent {
 
   private sendPostRequest(message: string): void {
     const apiUrl = 'http://127.0.0.1:8000/pregunta/';
-    const requestBody = { "role": 'user', "prompt": message };
+    //const requestBody = { "role": 'user', "prompt": message };
+    const requestBody = {"prompt": message, "username": this.actualUser.username};
 
     this.httpClient.post(apiUrl, requestBody).subscribe(
       (response) => {
@@ -59,5 +92,15 @@ export class ChatContentComponent {
       }
     );
   }
+
+  /*sendPostRequest(data: any): Observable<any> {
+     return this.httpClient.post<any>(YOUR-SERVER-URL, data);
+  }*/
+  
+  /*sendPostRequest(data).subscribe(
+      res => {
+        console.log(res);
+      }
+  );*/
 
 }

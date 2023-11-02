@@ -1,0 +1,13 @@
+<!--<a routerLink="/chat">Start chatting</a>-->
+<!-- app.component.html -->
+<div *ngIf="!authenticationService.currentUserValue">
+    <a routerLink="/login">Login</a>
+    <br>
+    <a routerLink="/register">Register</a>
+</div>
+<div *ngIf="authenticationService.currentUserValue">
+    <p>Welcome, {{ authenticationService.currentUserValue.username }}!</p>
+    <a routerLink="/chat">Start chatting</a>
+    <br>
+    <button (click)="authenticationService.logout()">Logout</button>
+</div>

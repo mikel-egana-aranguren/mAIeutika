@@ -3,6 +3,7 @@
     <button (messageSent)="onMessageSent(prompt)">Submit</button>
 </div>-->
 <div class="chat_input">
-    <input type="text" [(ngModel)]="prompt" placeholder="" class="input">
+    <input #myInput type="text" [(ngModel)]="prompt" placeholder="" class="input" (keyup.enter)="onEnterKeyPressed($event)">
     <button (click)="sendMessage(prompt)" class="button">Submit</button>
+    <button (click)="redirectToHome()" class="goHome">Exit</button>
 </div>

@@ -10,7 +10,7 @@ openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 class Chat:
     
-    def __init__(self, model="gpt-3.5-turbo", temperature=1, max_tokens=100, top_p = 0.5, n=3, stop=None, frequency_penalty=0.6, presence_penalty=0.8, stream=False, context=None):
+    def __init__(self, model="gpt-3.5-turbo", temperature=1, max_tokens=1024, top_p = 0.5, n=3, stop=None, frequency_penalty=0.6, presence_penalty=0.8, stream=False, context=None):
         # gpt-3.5-turbo, gpt-4
         self.model = model
         self.temperature = temperature
@@ -23,10 +23,15 @@ class Chat:
         self.stream = stream
         # Example: {"role": "system", "content": "Eres un asistente muy útil."}
         # Roles: user, system, assistant
-        self.messages = [context] if context != None else []
     
-    def makePrompt(self, content):
-        self.messages.append({"role": "user", "content": content})
+    def makePrompt(self, content, messages, context):
+        if not messages:
+            messages = [context] if context != None else []
+        
+        if context and len(messages)%10 == 0:
+            messages.append({"role": "system", "content": context})
+        
+        messages.append({"role": "user", "content": content})
         
         response = openai.ChatCompletion.create(
             model = self.model,
@@ -37,12 +42,12 @@ class Chat:
             stop = self.stop,
             frequency_penalty = self.frequency_penalty,
             presence_penalty = self.presence_penalty,
-            messages=self.messages,
+            messages=messages,
             stream=self.stream
             )
         if not self.stream:
             response_content = response.choices[0].message.content
-            print(response_content)
+            #print(response_content)
         else:
             collected_text = []
             for chunk in response:
@@ -51,12 +56,10 @@ class Chat:
                 response_content = "".join([m.get('content', '') for m in collected_text])
                 print(response_content)
                 print("\033[H\033[J", end="") # Clear terminal
-            print(response_content)
-
-
-        self.messages.append({"role": "assistant", "content": response_content})
-        print(self.messages)
-        return response_content
+            #print(response_content)
+        messages.append({"role": "assistant", "content": response_content})
+        #print(self.messages)
+        return messages
     
     def generateImage(self, prompt, size="1024x1024"):
         response = openai.Image.create(

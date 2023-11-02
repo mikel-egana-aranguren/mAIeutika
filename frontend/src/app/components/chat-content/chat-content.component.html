@@ -1,6 +1,7 @@
 <div class="chat_container">
     <ng-container *ngFor="let message of messages">
-        <p>{{ message['content'] }}</p>
+        <p [style.color]="message['role'] === 'user' ? '#bbb' : '#fff'" [innerHTML]="message['content'] | markdown"></p>
+        <br>
     </ng-container>
 </div>
 
